@@ -118,4 +118,5 @@
   --chart-6: var(--color-green-500);
   --chart-7: var(--color-orange-500);
   --chart-8: var(--color-indigo-500);
+  --focus-ring: var(--color-gray-700);
 }
