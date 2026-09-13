@@ -16,7 +16,7 @@
 <section class="card">
   <div class="card__header">
     <div>
-      <p class="stat__label">Total líquido a pagar</p>
+      <h2 class="stat__label">Total líquido a pagar</h2>
       <p class="stat__value">{{ net_total|brl }}</p>
       <p class="stat__trend">
         {% if change_percent is not None %}
@@ -48,7 +48,7 @@
 </div>
 
 <section class="card">
-  <p class="card__title">Unidades <span class="muted">· {{ net_total|brl }}</span></p>
+  <h2 class="card__title">Unidades <span class="muted">· {{ net_total|brl }}</span></h2>
   {% if unit_weights %}
     <div class="weight-bar">
       {% for unit in unit_weights %}<span style="flex:{{ unit.weight|floatformat:2 }};background:var(--chart-{{ unit.color_index }})"></span>{% endfor %}
@@ -58,7 +58,7 @@
     </div>
     <div class="table-frame">
       <table class="table">
-        <thead><tr><th>Unidade</th><th class="num">Lançamentos</th><th class="num">Peso</th><th class="num">Valor líquido</th></tr></thead>
+        <thead><tr><th scope="col">Unidade</th><th class="num" scope="col">Lançamentos</th><th class="num" scope="col">Peso</th><th class="num" scope="col">Valor líquido</th></tr></thead>
         <tbody>
           {% for unit in unit_weights %}
           <tr>
