@@ -1,7 +1,14 @@
 /*
-  Design tokens ported from the Maybe design system (maybe-design-system.css).
-  Only the light theme is used. Semantic names follow the original utilities:
-  surface (page), container (cards), primary/secondary/subdued text.
+  Token layer. The neutral scale, spacing and shadow structure originated as a
+  port of the Maybe design system; the colour identity does not. The accent is
+  "verde Bernoulli" (#009E8E), Colégio Bernoulli's brand colour, and every
+  chromatic token below is derived from it or chosen to sit beside it.
+
+  Light theme only (see color-scheme). Semantic names: surface (page),
+  container (cards), primary/secondary/subdued text.
+
+  #009E8E is 3.34:1 on white: it is a FILL, STROKE and MARK colour, never text
+  on a light surface. Text uses --color-brand-700 (5.59:1).
 */
 @font-face {
   font-family: "Geist";
@@ -43,11 +50,12 @@
   --color-gray-800: #242424;
   --color-gray-900: #171717;
 
-  --color-green-50: #ecfdf3;
-  --color-green-100: #d1fadf;
-  --color-green-500: #12b76a;
-  --color-green-600: #10a861;
-  --color-green-700: #078c52;
+  /* verde Bernoulli */
+  --color-brand-50: #e6f5f4;
+  --color-brand-100: #c9e9e6;
+  --color-brand-500: #009e8e;
+  --color-brand-600: #038276;
+  --color-brand-700: #047569;
   --color-red-50: #fff1f0;
   --color-red-100: #ffdedb;
   --color-red-500: #f13636;
@@ -59,15 +67,8 @@
   --color-yellow-700: #b54708;
   --color-blue-50: #eff8ff;
   --color-blue-100: #d1e9ff;
-  --color-blue-500: #2e90fa;
   --color-blue-600: #1570ef;
   --color-blue-700: #175cd3;
-  --color-indigo-500: #6172f3;
-  --color-violet-500: #875bf7;
-  --color-cyan-500: #06aed4;
-  --color-pink-500: #f23e94;
-  --color-orange-500: #ff4405;
-  --color-fuchsia-500: #d444f1;
 
   --alpha-black-50: rgba(11, 11, 11, 0.05);
   --alpha-black-100: rgba(11, 11, 11, 0.08);
@@ -88,8 +89,8 @@
   --text-secondary: var(--color-gray-600);
   --text-subdued: var(--color-gray-500);
   --text-inverse: var(--color-white);
-  --text-link: var(--color-blue-600);
-  --text-success: var(--color-green-600);
+  --text-link: var(--color-brand-700);
+  --text-success: var(--color-brand-700);
   --text-warning: var(--color-yellow-600);
   --text-destructive: var(--color-red-700);
 
