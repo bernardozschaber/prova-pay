@@ -112,7 +112,7 @@ num sistema que deve durar anos. O nome do banco, usuário e volume foram alinha
 # banco descartável, sem tocar no db.sqlite3
 export BENCH=/tmp/bench.sqlite3 && rm -f $BENCH
 DATABASE_URL="sqlite:///$BENCH" python manage.py migrate
-DATABASE_URL="sqlite:///$BENCH" python manage.py seed
+DATABASE_URL="sqlite:///$BENCH" python manage.py seed --demo
 # popular com bulk_create e medir com django.test.Client + tracemalloc
 ```
 
@@ -124,11 +124,8 @@ DATABASE_URL="sqlite:///$BENCH" python manage.py seed
   agora porque `export.py` reproduz a formatação da planilha legada célula a célula,
   e o modo `write_only` restringe merges e alturas de linha — o risco de quebrar a
   compatibilidade com a rotina existente não se paga no volume atual.
-- As medições desta seção são scripts executados sob demanda, não testes de
-  regressão: nada quebra automaticamente se o resumo voltar a percorrer o
-  histórico inteiro. A suíte que existe hoje (seção 4) cobre corretude de
-  pagamento, não desempenho. Transformar o teto de queries desta seção em
-  asserção (`assertNumQueries`) é o primeiro item do roteiro em 4.4.
+- Não há suíte de testes automatizados. As medições deste documento são scripts
+  executados sob demanda, não testes de regressão.
 
 ---
 
