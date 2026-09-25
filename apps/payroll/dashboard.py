@@ -5,6 +5,7 @@ from decimal import Decimal
 
 from django.db.models import Count, Sum
 
+from apps.applicators.models import RegistrationStatus
 from apps.payroll.models import ServiceEntry
 
 # The dashboard reasons in payment cycles ("quinzenas"), not in calendar days:
@@ -111,5 +112,5 @@ def build_dashboard(period: DashboardPeriod) -> dict:
         "change_percent": change_percent,
         "series": cumulative_series(current),
         "unit_weights": unit_weights(current),
-        "review_count": current.filter(applicator__needs_review=True).values("applicator").distinct().count(),
+        "review_count": current.filter(applicator__registration_status=RegistrationStatus.NEW).values("applicator").distinct().count(),
     }
