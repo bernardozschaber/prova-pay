@@ -34,7 +34,7 @@
       <tbody>
         {% for row in group.rows %}
         <tr>
-          <td class="strong"><a href="{% url 'payroll:entry_list' %}?applicator={{ row.applicator_id }}&payment_date={{ row.payment_date|date:'Y-m-d' }}">{{ row.applicator_name }}</a>{% if row.needs_review %} <span class="badge badge--yellow" title="cadastro incompleto">!</span>{% endif %}<br><span class="small muted">{{ row.events|join:" · "|truncatechars:80 }}</span></td>
+          <td class="strong"><a href="{% url 'payroll:entry_list' %}?applicator={{ row.applicator_id }}&payment_date={{ row.payment_date|date:'Y-m-d' }}">{{ row.applicator_name }}</a>{% if row.is_new_registration %} <span class="badge badge--yellow" title="cadastro novo: primeiro pagamento">novo</span>{% endif %}<br><span class="small muted">{{ row.events|join:" · "|truncatechars:80 }}</span></td>
           <td><span class="badge badge--gray">{{ row.company_name }}</span></td>
           <td class="num">{{ row.gross|brl }}</td>
           <td class="num muted">−{{ row.inss|brl_plain }}</td>
