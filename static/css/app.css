@@ -1,5 +1,5 @@
-/* Layout and components. Mirrors the Maybe app shell: icon nav (84px) +
-   collapsible sidebar (280px) + full-width main column. */
+/* Layout and components. Notion-style shell: one wide nav column (icon +
+   label, user card at the bottom) + full-width main column. */
 *, *::before, *::after { box-sizing: border-box; }
 html, body { height: 100%; }
 body {
@@ -26,24 +26,12 @@ h1, h2, h3, p { margin: 0; }
 
 /* ---- App shell ------------------------------------------------------ */
 .app { display: flex; height: 100%; }
-.app__nav { width: 84px; flex-shrink: 0; display: flex; flex-direction: column; padding: 16px 0; margin-right: 8px; }
-.app__sidebar { width: 280px; flex-shrink: 0; padding: 16px 0; overflow-y: auto; }
-.app__sidebar[hidden] { display: none; }
+.app__nav { width: 240px; flex-shrink: 0; display: flex; flex-direction: column; padding: 16px 12px; }
 .app__main { flex: 1; min-width: 0; padding: 12px 12px 12px 0; }
 .app__main-card { --gutter: 20px; background: var(--bg-container); border-radius: var(--radius-xl); box-shadow: var(--shadow-border-xs); height: 100%; overflow-y: auto; display: flex; flex-direction: column; }
 .app__content { width: 100%; padding: 8px var(--gutter) 48px; }
 @media (max-width: 1024px) {
-  /* The sidebar holds the per-unit totals, which exist nowhere else. It opens
-     as an overlay drawer so the topbar toggle keeps meaning something. */
-  .app__sidebar {
-    position: fixed; top: 0; left: 0; bottom: 0; z-index: 40;
-    width: min(300px, 86vw);
-    background: var(--bg-container);
-    box-shadow: var(--shadow-md);
-    padding: 16px 8px;
-    animation: drawer-in .22s cubic-bezier(.22, 1, .36, 1);
-  }
-  .app__nav { width: 64px; margin-right: 4px; }
+  .app__nav { width: 200px; padding: 12px 8px; }
   .app__main { padding: 8px 8px 8px 0; }
   .app__main-card { --gutter: 14px; }
   .app__content { padding-bottom: 40px; }
@@ -52,42 +40,83 @@ h1, h2, h3, p { margin: 0; }
      24x24 AA floor once padding collapses. */
   .icon-button { width: 40px; height: 40px; }
   .btn--sm { padding: 8px 12px; }
-  .table td.actions { gap: 10px; }
+  .table td.actions > * + * { margin-left: 10px; }
 }
-@keyframes drawer-in { from { transform: translateX(-100%); } to { transform: translateX(0); } }
-.sidebar-backdrop { position: fixed; inset: 0; z-index: 39; background: rgba(11, 11, 11, .4); border: 0; }
 
 /* Reduced motion: kill movement, keep the colour and shadow fades that report
    state. A blanket 0.01ms would remove the feedback along with the motion. */
 @media (prefers-reduced-motion: reduce) {
-  .app__sidebar { animation: none; }
   .chevron { transition: none; }
+  .theme-toggle__slot > .icon { transition: opacity 180ms ease; }
 }
 
-/* Icon navigation */
-.nav__logo { display: block; margin: 0 auto 12px; width: 44px; height: 28px; }
+/* Icon navigation — Notion-style: icon and label side by side, full column
+   width, active item picked out with a filled row instead of a thin bar. */
+.nav__logo { display: flex; align-items: center; gap: 8px; padding: 4px 8px; margin-bottom: 16px; }
+.nav__logo-text { font-size: var(--text-label); font-weight: 700; color: var(--text-primary); }
 .nav__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
-.nav__item { display: block; position: relative; padding-bottom: 4px; }
-.nav__item-row { display: flex; align-items: center; gap: 4px; }
-.nav__indicator { width: 4px; height: 16px; border-radius: 0 4px 4px 0; }
-.nav__item.is-active .nav__indicator { background: var(--color-brand-500); }
-.nav__icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto; border-radius: var(--radius-md); color: var(--text-secondary); }
-.nav__item:hover .nav__icon { background: var(--bg-surface-hover); }
-.nav__item.is-active .nav__icon { background: var(--bg-container); box-shadow: var(--shadow-xs); color: var(--text-primary); }
-.nav__label { display: block; text-align: center; font-size: var(--text-micro); font-weight: 500; color: var(--text-secondary); padding-left: 8px; }
-.nav__item.is-active .nav__label { color: var(--text-primary); }
-.nav__footer { margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: 8px; padding-left: 8px; }
-.avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--color-gray-200); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-size: var(--text-body); font-weight: 500; border: 0; }
+.nav__item { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: var(--radius-md); color: var(--text-secondary); }
+.nav__item:hover { background: var(--bg-surface-hover); }
+.nav__item.is-active { background: var(--bg-container); box-shadow: var(--shadow-xs); color: var(--text-primary); }
+.nav__icon { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav__label { font-size: var(--text-body); font-weight: 500; }
+/* O rodapé fica no fim da mesma coluna larga: cabe nome, cargo e unidade por
+   extenso sem precisar fugir da grade, ao contrário do rail estreito de antes. */
+.nav__footer { margin-top: auto; display: flex; flex-direction: column; gap: 4px; padding-top: 8px; }
+.nav__user { display: flex; align-items: center; gap: 8px; min-width: 0; border-radius: var(--radius-md); padding: 6px; }
+.nav__user:hover, .nav__user.is-active { background: var(--bg-surface-hover); }
+.nav__user-info { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.nav__user-name { font-size: var(--text-label); font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav__user-meta { font-size: var(--text-micro); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav__footer-actions { display: flex; align-items: center; gap: 2px; }
+.nav__footer-actions form { display: contents; }
 
-/* Sidebar */
-.sidebar__action { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: var(--radius-md); font-size: var(--text-body); font-weight: 500; color: var(--text-primary); }
-.sidebar__action:hover { background: var(--bg-surface-hover); }
-.sidebar__group { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: var(--radius-md); }
-.sidebar__group:hover { background: var(--bg-surface-hover); }
-.sidebar__group-name { display: flex; align-items: center; gap: 10px; font-weight: 500; }
-.sidebar__group-company { display: block; font-size: var(--text-micro); font-weight: 400; color: var(--text-secondary); }
-.sidebar__group-value { text-align: right; }
-.sidebar__group-value .mono { display: block; font-size: var(--text-micro); color: var(--text-secondary); }
+/* Rostos. Um círculo em três tamanhos: célula de tabela, barra e cartão de
+   perfil. Sem foto, a peça cai para as iniciais e mantém a mesma silhueta. */
+.avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--color-gray-200); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-size: var(--text-body); font-weight: 500; border: 0; flex-shrink: 0; }
+/* A foto é o recorte inteiro: nada de anel cinza em volta do círculo. */
+.avatar--photo { object-fit: cover; background: none; }
+.avatar--sm { width: 20px; height: 20px; font-size: var(--text-micro); }
+.avatar--lg { width: 56px; height: 56px; font-size: var(--text-metric); }
+.avatar--xl { width: 96px; height: 96px; font-size: var(--text-display); }
+
+/* Quem importou: rosto e nome na mesma linha, sem esticar a altura da linha —
+   por isso o rosto tem 20px, a mesma caixa da linha de texto da tabela. */
+.user-cell { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.user-cell > span { font-weight: 400; }
+/* Autoria como selo: o rosto encaixa na pílula e o nome cai para 12px, então a
+   marca de quem importou cabe na mesma caixa de linha da tabela. */
+.user-cell--chip { gap: 6px; padding: 2px 10px 2px 2px; border-radius: 999px; background: var(--bg-container-inset); }
+.user-cell--chip .avatar { width: 16px; height: 16px; }
+.user-cell--chip > span { font-size: var(--text-label); }
+
+/* Importações recentes: a tabela tem a largura do próprio conteúdo em vez de
+   esticar até a borda do card, então o arquivo, a data e os números ficam lado
+   a lado e a leitura da linha não atravessa uma faixa vazia. */
+.table--imports { width: auto; }
+.table--imports th, .table--imports td { white-space: nowrap; }
+.table--imports td.units > * + * { margin-left: 4px; }
+/* A coluna da seleção abre a linha, então ela é a única que alinha à esquerda
+   e encosta no nome do arquivo em vez de ganhar uma calha própria. A caixa e o
+   X ficam lado a lado, com o espaçamento que .table td.actions já dá. */
+.table--imports th.actions--lead, .table--imports td.actions--lead { text-align: left; padding-right: 0; }
+.table--imports th.actions--lead input, .table--imports td.actions--lead input { vertical-align: middle; }
+
+/* Planilha original: uma grade de células, sem hierarquia que o sistema não
+   viu no arquivo. Mono porque é leitura de dados, não de prosa, e a tabela tem
+   a largura do conteúdo — a aba manda, não o card. */
+.table--sheet { width: auto; font-family: var(--font-mono); font-size: var(--text-data); }
+.table--sheet td { border: 1px solid var(--border-tertiary); padding: 6px 10px; max-width: 34ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.table--sheet tbody tr:hover td { background: var(--bg-container-hover); }
+
+/* Página do perfil. */
+.profile-card__identity { display: flex; align-items: center; gap: 16px; }
+.profile-card__name { margin: 0; font-size: var(--text-headline); font-weight: 500; line-height: var(--leading-snug); }
+.profile-card__role { margin: 4px 0 0; font-size: var(--text-body); color: var(--text-secondary); }
+.profile-card__facts { margin: 16px 0 0; padding-top: 16px; border-top: 1px solid var(--border-tertiary); display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.profile-card__facts dt { font-size: var(--text-label); color: var(--text-secondary); }
+.profile-card__facts dd { margin: 4px 0 0; font-size: var(--text-body); color: var(--text-primary); overflow-wrap: anywhere; }
+.profile-card__facts a { color: var(--text-link); }
 
 /* Breadcrumb / top bar */
 .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px var(--gutter); }
@@ -95,6 +124,20 @@ h1, h2, h3, p { margin: 0; }
 .breadcrumb .current { color: var(--text-primary); }
 .icon-button { width: 32px; height: 32px; border: 0; background: transparent; border-radius: var(--radius-md); color: var(--text-secondary); display: inline-flex; align-items: center; justify-content: center; }
 .icon-button:hover { background: var(--bg-surface-hover); color: var(--text-primary); }
+/* Ação destrutiva: neutra em repouso, para não puxar o olho antes da leitura
+   da linha; o vermelho só aparece quando o cursor já está sobre ela. */
+.icon-button--danger:hover { background: var(--color-red-50); color: var(--color-red-700); }
+
+/* Theme toggle. One button, two glyphs sharing a grid cell and cross-fading:
+   the icon names the action, not the state, so the moon offers the dark mode
+   and the sun offers the way back. aria-pressed (set in app.js) drives the
+   swap, which keeps this free of any [data-theme] selector. */
+.theme-toggle { cursor: pointer; }
+.theme-toggle__slot { display: grid; width: 18px; height: 18px; }
+.theme-toggle__slot > .icon { grid-area: 1 / 1; transition: opacity 180ms ease, transform 260ms cubic-bezier(.2, .8, .2, 1); }
+.theme-toggle__sun { opacity: 0; transform: rotate(-60deg) scale(.6); }
+.theme-toggle[aria-pressed="true"] .theme-toggle__moon { opacity: 0; transform: rotate(60deg) scale(.6); }
+.theme-toggle[aria-pressed="true"] .theme-toggle__sun { opacity: 1; transform: none; }
 
 /* Page header */
 .page-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 24px; }
@@ -135,6 +178,7 @@ h1, h2, h3, p { margin: 0; }
 .btn--danger { background: var(--bg-container); color: var(--text-destructive); border-color: var(--border-secondary); }
 .btn--danger:hover { background: var(--color-red-50); }
 .btn--sm { padding: 4px 10px; font-size: var(--text-body); border-radius: var(--radius-md); }
+.btn[hidden] { display: none; }
 .btn svg { width: 16px; height: 16px; }
 
 /* Forms */
@@ -162,7 +206,13 @@ h1, h2, h3, p { margin: 0; }
 .table td { padding: 12px; border-bottom: 1px solid var(--border-tertiary); vertical-align: middle; }
 .table tbody tr:last-child td { border-bottom: 0; }
 .table tbody tr:hover td { background: var(--bg-container-hover); }
-.table td.actions { display: flex; gap: 6px; justify-content: flex-end; align-items: center; }
+/* Ações da linha. A célula continua sendo uma célula de tabela: com
+   `display: flex` ela deixa de ser table-cell, perde o `vertical-align` da
+   linha e os botões sobem para o topo nas linhas de duas alturas. O
+   espaçamento vem de margem entre irmãos, não de gap. */
+.table td.actions { text-align: right; white-space: nowrap; }
+.table td.actions > * { vertical-align: middle; }
+.table td.actions > * + * { margin-left: 6px; }
 .table .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .table .muted { color: var(--text-secondary); }
 .table .strong { font-weight: 500; }
@@ -192,6 +242,36 @@ h1, h2, h3, p { margin: 0; }
 .alert--error { background: var(--color-red-50); color: var(--color-red-700); }
 .alert--info { background: var(--color-blue-50); color: var(--color-blue-700); }
 .alert--warning { background: var(--color-yellow-50); color: var(--color-yellow-700); }
+
+/* Diálogo de duplicatas. O card flutua sobre a conferência sem escondê-la: o
+   fundo é translúcido e desfocado, para a pessoa manter a lista no campo de
+   visão enquanto decide sobre um par de nomes por vez. */
+.modal { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; }
+.modal[hidden] { display: none; }
+.modal__backdrop { position: absolute; inset: 0; background: color-mix(in srgb, var(--bg-surface) 70%, transparent); backdrop-filter: blur(6px); }
+.modal__card { position: relative; width: min(680px, 100%); max-height: min(86vh, 720px); overflow-y: auto; background: var(--bg-container); border-radius: var(--radius-xl); box-shadow: var(--shadow-md), 0 24px 48px -12px var(--alpha-black-50); padding: 24px; }
+.modal__step { font-size: var(--text-label); color: var(--text-secondary); margin-bottom: 4px; }
+.modal__title { font-size: var(--text-title); font-weight: 500; }
+.modal__lead { color: var(--text-secondary); font-size: var(--text-body); margin-top: 4px; }
+.modal__actions { display: flex; align-items: center; gap: 8px; margin-top: 20px; justify-content: flex-end; flex-wrap: wrap; }
+.modal__actions [data-merge-back] { margin-right: auto; }
+.modal__foot { margin-top: 12px; text-align: right; }
+
+.merge { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+.merge[hidden] { display: none; }
+/* Pergunta de criação: um nome só, sem par para comparar. */
+.merge--single { grid-template-columns: 1fr; }
+.merge__side { border: 1px solid var(--border-secondary); border-radius: var(--radius-lg); padding: 14px; }
+.merge__side--target { border-color: var(--color-brand-500); }
+.merge__label { font-size: var(--text-label); color: var(--text-secondary); text-transform: uppercase; letter-spacing: .04em; }
+.merge__name { font-size: var(--text-body); font-weight: 500; margin-top: 6px; }
+.merge__detail { font-size: var(--text-label); color: var(--text-secondary); margin-top: 2px; }
+.merge__services { list-style: none; margin-top: 10px; display: grid; gap: 4px; font-size: var(--text-label); color: var(--text-secondary); }
+
+@media (max-width: 640px) {
+  .merge { grid-template-columns: 1fr; }
+  .modal__card { padding: 18px; }
+}
 
 /* Weight bar (asset allocation style) */
 .weight-bar { display: flex; gap: 4px; height: 4px; margin: 12px 0 8px; }
@@ -247,3 +327,54 @@ h1, h2, h3, p { margin: 0; }
 /* Visible to assistive tech only: names the columns that read as blank. */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .pagination { display: flex; gap: 8px; justify-content: center; margin-top: 16px; font-size: var(--text-body); color: var(--text-secondary); align-items: center; }
+
+/* Ficha do aplicador: um cartão translúcido no meio da tela, com a foto 3x4
+   à esquerda. O fundo desfocado mantém a lista visível atrás sem competir
+   com a leitura — o contraste do texto vem do próprio cartão, que é opaco o
+   bastante (92%) para não depender do que está por baixo. */
+.sheet-overlay { position: fixed; inset: 0; z-index: 45; display: grid; place-items: center; padding: 24px; overflow-y: auto; }
+.sheet-overlay__backdrop { position: absolute; inset: 0; background: color-mix(in srgb, var(--color-gray-900) 45%, transparent); backdrop-filter: blur(6px); }
+.sheet-card { position: relative; width: min(760px, 100%); max-height: calc(100vh - 48px); overflow-y: auto; padding: 24px; border-radius: var(--radius-xl); border: 1px solid var(--border-secondary); background: color-mix(in srgb, var(--bg-container) 92%, transparent); box-shadow: var(--shadow-md), 0 24px 60px rgba(11, 11, 11, 0.22); }
+.sheet-card__head { display: flex; gap: 20px; align-items: flex-start; padding-bottom: 16px; border-bottom: 1px solid var(--border-tertiary); }
+/* 3x4 de verdade: a proporção é a da foto de documento, não um quadrado. */
+.sheet-card__photo { position: relative; flex-shrink: 0; width: 108px; aspect-ratio: 3 / 4; border-radius: var(--radius-lg); border: 1px dashed var(--border-secondary); background: var(--bg-container-inset); display: grid; place-items: center; overflow: hidden; }
+.sheet-card__photo img { width: 100%; height: 100%; object-fit: cover; border: 0; }
+.sheet-card__initials { font-size: var(--text-display); font-weight: 500; color: var(--text-secondary); }
+.sheet-card__photo-hint { position: absolute; bottom: 6px; font-size: var(--text-micro); color: var(--text-secondary); }
+.sheet-card__identity { min-width: 0; }
+.sheet-card__name { margin: 0; font-size: var(--text-headline); font-weight: 500; line-height: var(--leading-snug); }
+.sheet-card__status { margin: 8px 0 0; }
+.sheet-card__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.sheet-card__facts { margin: 16px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.sheet-card__facts dt { font-size: var(--text-label); color: var(--text-secondary); }
+.sheet-card__facts dd { margin: 4px 0 0; font-size: var(--text-body); color: var(--text-primary); overflow-wrap: anywhere; }
+.sheet-card__facts a { color: var(--text-link); }
+
+@media (max-width: 640px) {
+  .sheet-overlay { padding: 12px; }
+  .sheet-card { padding: 18px; }
+  .sheet-card__head { flex-direction: column; }
+}
+
+/* Colunas de dado da lista de aplicadores: CPF, WhatsApp e e-mail lidos na
+   mesma voz — mesmo tamanho, mesma família, números alinhados. Antes o CPF
+   vinha em mono e os outros em corpo menor, e as três colunas brigavam. */
+.table td.cell-data { font-family: var(--font-sans); font-size: var(--text-body); color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.table th.col-ficha, .table td.col-ficha { width: 1%; padding-right: 4px; text-align: center; }
+.icon-button--whatsapp:hover { color: #25d366; }
+
+/* Terceira resposta da conferência: escolher, na busca, o cadastro que já
+   existe. A lista rola dentro do card — a altura fixa impede que 200 nomes
+   empurrem os botões de resposta para fora da tela. */
+.picker { margin-top: 16px; border: 1px solid var(--border-secondary); border-radius: var(--radius-lg); padding: 12px; background: var(--bg-container-inset); }
+.picker[hidden] { display: none; }
+.picker__label { display: block; font-size: var(--text-label); color: var(--text-secondary); margin-bottom: 6px; }
+.picker__search { width: 100%; }
+.picker__list { list-style: none; margin: 10px 0 0; padding: 0; max-height: 240px; overflow-y: auto; display: grid; gap: 2px; }
+.picker__list li[hidden] { display: none; }
+.picker__option { display: block; width: 100%; text-align: left; border: 0; background: transparent; border-radius: var(--radius-md); padding: 8px 10px; color: var(--text-primary); }
+.picker__option:hover { background: var(--bg-container-hover); }
+.picker__name { display: block; font-size: var(--text-body); }
+.picker__detail { display: block; font-size: var(--text-label); color: var(--text-secondary); }
+.picker__empty { margin-top: 10px; font-size: var(--text-label); color: var(--text-secondary); }
+.merge__chosen { margin-top: 8px; font-size: var(--text-label); color: var(--color-brand-700); }
