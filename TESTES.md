@@ -5,7 +5,9 @@ com os números que sustentam cada decisão. Nada aqui é estimativa: toda afirm
 de desempenho vem de uma execução reproduzível, e toda afirmação de acessibilidade
 vem de um cálculo ou de uma ferramenta, não de impressão visual.
 
-Duas frentes: **desempenho em escala real** e **qualidade de interface**.
+Três frentes: **desempenho em escala real**, **qualidade de interface** e
+**integridade dos valores pagos**. A terceira trouxe junto a primeira suíte de
+testes automatizados do projeto, descrita na seção 4 — é dela que o TP2 parte.
 
 ---
 
@@ -110,7 +112,7 @@ num sistema que deve durar anos. O nome do banco, usuário e volume foram alinha
 # banco descartável, sem tocar no db.sqlite3
 export BENCH=/tmp/bench.sqlite3 && rm -f $BENCH
 DATABASE_URL="sqlite:///$BENCH" python manage.py migrate
-DATABASE_URL="sqlite:///$BENCH" python manage.py seed --demo
+DATABASE_URL="sqlite:///$BENCH" python manage.py seed
 # popular com bulk_create e medir com django.test.Client + tracemalloc
 ```
 
@@ -122,8 +124,11 @@ DATABASE_URL="sqlite:///$BENCH" python manage.py seed --demo
   agora porque `export.py` reproduz a formatação da planilha legada célula a célula,
   e o modo `write_only` restringe merges e alturas de linha — o risco de quebrar a
   compatibilidade com a rotina existente não se paga no volume atual.
-- Não há suíte de testes automatizados. As medições deste documento são scripts
-  executados sob demanda, não testes de regressão.
+- As medições desta seção são scripts executados sob demanda, não testes de
+  regressão: nada quebra automaticamente se o resumo voltar a percorrer o
+  histórico inteiro. A suíte que existe hoje (seção 4) cobre corretude de
+  pagamento, não desempenho. Transformar o teto de queries desta seção em
+  asserção (`assertNumQueries`) é o primeiro item do roteiro em 4.4.
 
 ---
 

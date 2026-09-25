@@ -322,5 +322,5 @@ Autenticação por sessão (faça login na interface e acesse `/api/` no navegad
 * Commits seguem [Conventional Commits](https://www.conventionalcommits.org/) e ficam abaixo de \~100 linhas (exceções justificadas na mensagem).
 * Código, nomes de variáveis e comentários em inglês; interface em português.
 * Interface baseada no design system do [Maybe](https://github.com/maybe-finance/maybe) (fonte Geist, paleta e componentes), reescrito em CSS puro em `static/css/`.
-* As planilhas reais do setor não são versionadas (`.gitignore`), pois contêm dados pessoais; use `docs/samples/lista\\\_pagamento\\\_exemplo.xlsx`.
+* As planilhas reais do setor não são versionadas (`.gitignore`), pois contêm dados pessoais; para conferir o parser há `docs/samples/lista\\\_pagamento\\\_exemplo.xlsx`, que nenhum comando carrega sozinho — o banco só recebe dado real, pela importação.
 
