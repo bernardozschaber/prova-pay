@@ -1,5 +1,5 @@
 {% extends "base.html" %}{% load icons money humanize %}
-{% block title %}Início · ProvaPay{% endblock %}
+{% block title %}Início · BernoulliPay{% endblock %}
 {% block breadcrumb %}{% icon "chevron-right" 14 %}<span class="current">Painel</span>{% endblock %}
 {% block content %}
 <div class="page-header">
@@ -16,11 +16,11 @@
 <section class="card">
   <div class="card__header">
     <div>
-      <p class="stat__label">Total líquido a pagar</p>
+      <h2 class="stat__label">Total líquido a pagar</h2>
       <p class="stat__value">{{ net_total|brl }}</p>
       <p class="stat__trend">
         {% if change_percent is not None %}
-          <span class="mono {% if change >= 0 %}trend-up{% else %}trend-down{% endif %}">{{ change|brl }} ({% if change >= 0 %}↑{% else %}↓{% endif %}{{ change_percent|floatformat:1 }}%)</span> vs. período anterior
+          <span class="mono {% if change >= 0 %}trend-up{% else %}trend-down{% endif %}">{{ change|brl }} ({% if change >= 0 %}{% icon "arrow-up" 12 css_class="trend-icon" %}{% else %}{% icon "arrow-down" 12 css_class="trend-icon" %}{% endif %}{{ change_percent|floatformat:1 }}%)</span> vs. período anterior
         {% else %}
           <span class="mono">{{ entry_count }} lançamento{{ entry_count|pluralize }}</span> · {{ applicator_count }} aplicador{{ applicator_count|pluralize:"es" }}
         {% endif %}
@@ -34,9 +34,10 @@
     </form>
   </div>
   {% if series %}
-    <div class="chart" data-chart='{{ series_json }}'></div>
+    <div class="chart" data-chart='{{ series_json }}'
+         data-chart-label="Evolução do valor líquido a pagar no período selecionado, total {{ net_total|brl }} em {{ entry_count }} lançamento{{ entry_count|pluralize }}"></div>
   {% else %}
-    <div class="empty">Nenhum lançamento no período. <a href="{% url 'imports:upload' %}" style="color:var(--text-link)">Importe uma lista de pagamento</a> para começar.</div>
+    <div class="empty">Nenhum lançamento no período. <a href="{% url 'imports:upload' %}" class="link">Importe uma lista de pagamento</a> para começar.</div>
   {% endif %}
 </section>
 
@@ -48,7 +49,7 @@
 </div>
 
 <section class="card">
-  <p class="card__title">Unidades <span class="muted">· {{ net_total|brl }}</span></p>
+  <h2 class="card__title">Unidades <span class="muted">· {{ net_total|brl }}</span></h2>
   {% if unit_weights %}
     <div class="weight-bar">
       {% for unit in unit_weights %}<span style="flex:{{ unit.weight|floatformat:2 }};background:var(--chart-{{ unit.color_index }})"></span>{% endfor %}
@@ -58,7 +59,7 @@
     </div>
     <div class="table-frame">
       <table class="table">
-        <thead><tr><th>Unidade</th><th class="num">Lançamentos</th><th class="num">Peso</th><th class="num">Valor líquido</th></tr></thead>
+        <thead><tr><th scope="col">Unidade</th><th class="num" scope="col">Lançamentos</th><th class="num" scope="col">Peso</th><th class="num" scope="col">Valor líquido</th></tr></thead>
         <tbody>
           {% for unit in unit_weights %}
           <tr>

@@ -1,4 +1,4 @@
-# ProvaPay — Controle de Pagamentos RPA de Aplicadores (Colégio Bernoulli)
+# BernoulliPay — Controle de Pagamentos RPA de Aplicadores (Colégio Bernoulli)
 
 > Repositório do TP1 de Engenharia de Software (tp1-eng-soft)
 
@@ -11,7 +11,7 @@
 
 ## Objetivo do sistema (\~5 linhas):
 
-O ProvaPay automatiza o controle de pagamentos via RPA (Recibo de Pagamento Autônomo) dos aplicadores de prova que prestam serviço freelancer para o Colégio Bernoulli. Hoje esse processo é feito manualmente em planilhas Excel separadas — uma de cadastro/agendamento dos aplicadores e outra de conferência de lançamentos, valores e unidades — o que é sujeito a erro e difícil de auditar. O sistema unifica esses dados em um banco único e em uma interface web interativa, permitindo importar ou lançar as atividades realizadas por aplicador, evento, data e unidade do colégio. A partir do valor líquido recebido em cada atividade, o sistema calcula automaticamente o valor bruto do RPA e os descontos de INSS, ISS e IR, além de consolidar o total a pagar por aplicador. O objetivo é dar mais confiabilidade, rastreabilidade e agilidade ao fechamento mensal de pagamentos, substituindo o fluxo atual baseado em planilhas.
+O BernoulliPay automatiza o controle de pagamentos via RPA (Recibo de Pagamento Autônomo) dos aplicadores de prova que prestam serviço freelancer para o Colégio Bernoulli. Hoje esse processo é feito manualmente em planilhas Excel separadas — uma de cadastro/agendamento dos aplicadores e outra de conferência de lançamentos, valores e unidades — o que é sujeito a erro e difícil de auditar. O sistema unifica esses dados em um banco único e em uma interface web interativa, permitindo importar ou lançar as atividades realizadas por aplicador, evento, data e unidade do colégio. A partir do valor líquido recebido em cada atividade, o sistema calcula automaticamente o valor bruto do RPA e os descontos de INSS, ISS e IR, além de consolidar o total a pagar por aplicador. O objetivo é dar mais confiabilidade, rastreabilidade e agilidade ao fechamento mensal de pagamentos, substituindo o fluxo atual baseado em planilhas.
 
 ## Tecnologias (linguagem, frameworks, BD e agentes de IA):
 
@@ -19,7 +19,11 @@ O ProvaPay automatiza o controle de pagamentos via RPA (Recibo de Pagamento Aut�
 * Frameworks: Django 5.2 (backend + API REST com Django REST Framework) e Django Templates + CSS e JavaScript puros (frontend web)
 * Leitura/escrita de planilhas: openpyxl
 * BD: PostgreSQL (via `DATABASE\\\_URL`); SQLite como fallback para desenvolvimento local
-* Agentes de IA: Claude Code (Fable 5.1), OpenAI Codex (GPT-5.6), Google Gemini (3.1 Pro)
+* Agentes de IA (código): Claude Code (Fable 5.1), OpenAI Codex (GPT-5.6), Google Gemini (3.1 Pro)
+* IA generativa (identidade visual): **v0.app** — primeira rodada de conceitos de logo e a galeria
+  de comparação; **geração de imagens do ChatGPT** — segunda rodada e os arquivos finais. O processo
+  completo, com os briefings e o que foi descartado, está em [`DESIGN.md`](DESIGN.md), seção
+  `## Identity`.
 
 ## Histórias de usuários (\~8 histórias com 1-2 linhas por história):
 
@@ -45,8 +49,25 @@ python manage.py runserver
 Acesse http://127.0.0.1:8000 e entre com `admin` / `admin`.
 
 Para usar PostgreSQL, suba o banco com `docker compose up -d` e exporte
-`DATABASE\\\_URL=postgres://provapay:provapay@localhost:5432/provapay` antes de rodar
+`DATABASE\\\_URL=postgres://bernoullipay:bernoullipay@localhost:5432/bernoullipay` antes de rodar
 `migrate` (ver `.env.example`). Sem a variável o projeto usa `db.sqlite3`.
+
+> **Vindo de uma versão anterior?** O banco, o usuário e o volume do Postgres foram
+> renomeados de `provapay` para `bernoullipay` junto com o rebranding. O Postgres só cria
+> o usuário e o banco quando o diretório de dados está vazio, então o volume também mudou
+> de nome (`bernoullipay_pgdata`) — assim um `docker compose up -d` já sobe limpo, sem erro
+> de autenticação. O volume antigo não é apagado, apenas fica órfão: remova com
+> `docker volume rm pgdata` quando tiver certeza de que não precisa mais dele.
+
+## Testes e medições
+
+As decisões de desempenho e de interface deste projeto estão documentadas em
+[`TESTES.md`](TESTES.md), com os números que as sustentam: benchmarks em volume real
+(52 mil e 208 mil lançamentos), razões de contraste WCAG calculadas, validação da
+paleta categórica e o que explicitamente **não** foi verificado.
+
+Destaques: o Resumo saiu de 35,8s/189 MB para 2,4s/23 MB e o export de 164,0s/534 MB
+para 6,4s/24 MB, e o custo de ambos deixou de crescer com o histórico acumulado.
 
 ## Regras de negócio
 

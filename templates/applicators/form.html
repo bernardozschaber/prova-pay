@@ -1,12 +1,12 @@
 {% extends "base.html" %}{% load icons %}
-{% block title %}{{ title }} · ProvaPay{% endblock %}
+{% block title %}{{ title }} · BernoulliPay{% endblock %}
 {% block breadcrumb %}{% icon "chevron-right" 14 %}<a href="{% url 'applicators:list' %}">Aplicadores</a>{% icon "chevron-right" 14 %}<span class="current">{{ title }}</span>{% endblock %}
 {% block content %}
 <div class="page-header"><div><h1>{{ title }}</h1><p>Dados pessoais, acadêmicos e bancários</p></div></div>
 <form method="post" class="card">{% csrf_token %}
   <div class="form-grid">
     {% for field in form %}
-      {% if field.name == 'needs_review' or field.name == 'is_active' %}
+      {% if field.name == 'is_active' or field.name == 'vse' %}
         <label class="row" style="padding:8px 0">{{ field }} {{ field.label }}</label>
       {% else %}
         <div class="field {% if field.errors %}field--error{% endif %}" {% if field.name == 'full_name' or field.name == 'notes' %}style="grid-column:1/-1"{% endif %}>

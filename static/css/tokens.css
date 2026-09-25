@@ -1,31 +1,59 @@
 /*
-  Design tokens ported from the Maybe design system (maybe-design-system.css).
-  Only the light theme is used. Semantic names follow the original utilities:
-  surface (page), container (cards), primary/secondary/subdued text.
+  Token layer. The neutral scale, spacing and shadow structure originated as a
+  port of the Maybe design system; the colour identity does not. The accent is
+  "verde Bernoulli" (#009E8E), Colégio Bernoulli's brand colour, and every
+  chromatic token below is derived from it or chosen to sit beside it.
+
+  Light theme only (see color-scheme). Semantic names: surface (page),
+  container (cards), primary/secondary/subdued text.
+
+  #009E8E is 3.34:1 on white: it is a FILL, STROKE and MARK colour, never text
+  on a light surface. Text uses --color-brand-700 (5.59:1).
 */
+/* IBM Plex Sans + IBM Plex Mono — SIL Open Font License 1.1 (see
+   ../fonts/IBMPlex-LICENSE.txt). Self-hosted; no CDN dependency.
+   Split by unicode-range: pt-BR lives entirely in `latin`, so `latin-ext`
+   is only fetched if a name needs it. Verified with fontTools: full
+   coverage of ãáàâçéêíóôõúü and of R$ · — ↑ ↓ %.
+   The sans and the mono are drawn as one family, which is why the money
+   columns and their labels sit on the same skeleton. */
 @font-face {
-  font-family: "Geist";
-  src: url("../fonts/Geist-Variable.woff2") format("woff2-variations");
-  font-weight: 100 900;
+  font-family: "IBM Plex Sans";
+  src: url("../fonts/IBMPlexSans-Variable-latin.woff2") format("woff2-variations");
+  font-weight: 100 700;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: "Geist Mono";
-  src: url("../fonts/GeistMono-Regular.woff2") format("woff2");
+  font-family: "IBM Plex Sans";
+  src: url("../fonts/IBMPlexSans-Variable-latin-ext.woff2") format("woff2-variations");
+  font-weight: 100 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("../fonts/IBMPlexMono-Regular-latin.woff2") format("woff2");
   font-weight: 400;
+  font-style: normal;
   font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: "Geist Mono";
-  src: url("../fonts/GeistMono-Medium.woff2") format("woff2");
-  font-weight: 500;
+  font-family: "IBM Plex Mono";
+  src: url("../fonts/IBMPlexMono-Regular-latin-ext.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
   font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
-
 :root {
-  --font-sans: "Geist", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color-scheme: light;
+
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --color-white: #ffffff;
   --color-black: #0b0b0b;
@@ -41,11 +69,12 @@
   --color-gray-800: #242424;
   --color-gray-900: #171717;
 
-  --color-green-50: #ecfdf3;
-  --color-green-100: #d1fadf;
-  --color-green-500: #12b76a;
-  --color-green-600: #10a861;
-  --color-green-700: #078c52;
+  /* verde Bernoulli */
+  --color-brand-50: #e6f5f4;
+  --color-brand-100: #c9e9e6;
+  --color-brand-500: #009e8e;
+  --color-brand-600: #038276;
+  --color-brand-700: #047569;
   --color-red-50: #fff1f0;
   --color-red-100: #ffdedb;
   --color-red-500: #f13636;
@@ -57,15 +86,8 @@
   --color-yellow-700: #b54708;
   --color-blue-50: #eff8ff;
   --color-blue-100: #d1e9ff;
-  --color-blue-500: #2e90fa;
   --color-blue-600: #1570ef;
   --color-blue-700: #175cd3;
-  --color-indigo-500: #6172f3;
-  --color-violet-500: #875bf7;
-  --color-cyan-500: #06aed4;
-  --color-pink-500: #f23e94;
-  --color-orange-500: #ff4405;
-  --color-fuchsia-500: #d444f1;
 
   --alpha-black-50: rgba(11, 11, 11, 0.05);
   --alpha-black-100: rgba(11, 11, 11, 0.08);
@@ -83,18 +105,39 @@
   --bg-inverse-hover: var(--color-gray-700);
 
   --text-primary: var(--color-gray-900);
-  --text-secondary: var(--color-gray-500);
-  --text-subdued: var(--color-gray-400);
+  --text-secondary: var(--color-gray-600);
+  --text-subdued: var(--color-gray-500);
   --text-inverse: var(--color-white);
-  --text-link: var(--color-blue-600);
-  --text-success: var(--color-green-600);
+  --text-link: var(--color-brand-700);
+  --text-success: var(--color-brand-700);
   --text-warning: var(--color-yellow-600);
-  --text-destructive: var(--color-red-600);
+  --text-destructive: var(--color-red-700);
 
   --border-primary: var(--alpha-black-300);
   --border-secondary: var(--alpha-black-200);
   --border-tertiary: var(--alpha-black-100);
   --border-subdued: var(--alpha-black-50);
+
+  --focus-ring: var(--color-gray-700);
+
+  /* Type scale. Expressed in rem so a reader's browser font-size preference is
+     honoured — the whole ramp was px, which silently ignored that setting.
+     0.875rem body is the deliberate density floor for an all-day desktop
+     workflow; every other step is a role, not a value. */
+  --text-hero: 2.25rem;      /* 36px  the payable total, the number the product exists to produce */
+  --text-display: 1.875rem;  /* 30px  page title */
+  --text-headline: 1.375rem; /* 22px  login heading, page title under 640px */
+  --text-metric: 1.25rem;    /* 20px  metric tile value */
+  --text-title: 1rem;        /* 16px  card heading, page lede */
+  --text-body: 0.875rem;     /* 14px  default */
+  --text-data: 0.8125rem;    /* 13px  inline mono, optically matched to body */
+  --text-label: 0.75rem;     /* 12px  field labels, metadata */
+  --text-micro: 0.6875rem;   /* 11px  nav labels, uppercase column headers */
+
+  --leading-tight: 1.15;     /* display and hero: 1.5 leaves headings floating */
+  --leading-snug: 1.3;
+  --leading-body: 1.5;
+  --measure: 68ch;           /* prose cap; tables and data are exempt */
 
   --radius-sm: 6px;
   --radius-md: 8px;
@@ -107,13 +150,18 @@
   --shadow-border-xs: var(--shadow-xs), 0 0 0 1px var(--alpha-black-50);
   --shadow-border-sm: var(--shadow-sm), 0 0 0 1px var(--alpha-black-50);
 
-  /* Categorical palette for charts (Maybe account-group colors) */
-  --chart-1: var(--color-violet-500);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-gray-500);
-  --chart-4: var(--color-cyan-500);
-  --chart-5: var(--color-pink-500);
-  --chart-6: var(--color-green-500);
-  --chart-7: var(--color-orange-500);
-  --chart-8: var(--color-indigo-500);
+  /* Categorical palette for the per-unit weight bar and legend.
+     Derived by farthest-point search in OKLCH inside a muted chroma band, then
+     validated with the data-viz palette validator (light, surface #ffffff):
+     all five checks PASS on the adjacent pairlist (the stacked-bar rule), and
+     the first four slots — the four real school units — also clear the
+     stricter all-pairs gate. Assign in fixed order; never cycle. */
+  --chart-1: #009e8e;
+  --chart-2: #255ebc;
+  --chart-3: #934f00;
+  --chart-4: #5f8df3;
+  --chart-5: #ca7500;
+  --chart-6: #8a4a71;
+  --chart-7: #2783b2;
+  --chart-8: #b1614b;
 }
